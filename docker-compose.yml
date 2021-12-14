@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  database:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DATABASE: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+  project:
+    container_name: python-project
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_DATABASE: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+      DEBUG: 'True'
+    volumes:
+      - .:/project
+    depends_on:
+      - database
